@@ -1,16 +1,15 @@
-import { Link } from "@remix-run/react";
 import { LoaderFunction, useLoaderData } from "remix";
-import { getUserWorkout } from "~/services/workouts";
-import { ExerciseTemplate, Workout } from "~/model/types";
+import { getWorkout } from "~/services/workouts";
+import { Exercise, Workout } from "~/model/types";
 
 interface Props {
-  exercise: ExerciseTemplate;
+  exercise: Exercise;
 }
 
 function Workout({ exercise }: Props) {
   return (
     <div>
-      <Link to={`/exercises/${exercise.slug}`}>{exercise.name}</Link>
+      <div>{exercise.name}</div>
       <div>{exercise.reps.length}</div>
     </div>
   );
@@ -19,9 +18,9 @@ function Workout({ exercise }: Props) {
 type LoaderData = Workout;
 
 export const loader: LoaderFunction = ({ params: { id } }) => {
-  console.log("id", id);
-  if (!id) throw new Error("ahhhhhhh");
-  const workout = getUserWorkout(id);
+  if (!id) throw new Error("no id param");
+
+  const workout = getWorkout(id);
   if (!workout) {
     throw new Error("No workout found");
   }
@@ -35,7 +34,7 @@ export default function SingleWorkout() {
     <div>
       <h2>{data.name}</h2>
       {data.exercises.map((exercise) => (
-        <Workout key={exercise.slug} exercise={exercise} />
+        <Workout key={exercise.id} exercise={exercise} />
       ))}
       <form method="post">
         <input type="hidden" name="workout-id" value={data.id} />

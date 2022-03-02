@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model WorkoutTemplate {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  name       String
+  exercises  ExerciseTemplate[]
+}
+
+model ExerciseTemplate {
+    id         String   @id @default(uuid())
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    workout    WorkoutTemplate @relation(fields: [workoutId], references: [id])
+    workoutId  String
+    name       String
+    reps       RepTemplate[]
+}
+
+model RepTemplate {
+    id         String   @id @default(uuid())
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    exercise    ExerciseTemplate @relation(fields: [exerciseId], references: [id])
+    exerciseId  String
+    count       Int
+    order       Int
+}
+
+model Workout {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  name       String
+  exercises  Exercise[]
+}
+
+model Exercise {
+    id         String   @id @default(uuid())
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    workout    Workout @relation(fields: [workoutId], references: [id])
+    workoutId  String
+    name       String
+    reps       Rep[]
+}
+
+model Rep {
+    id         String   @id @default(uuid())
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    exercise    Exercise @relation(fields: [exerciseId], references: [id])
+    exerciseId  String
+    count       Int
+    weight      Int
+    order       Int
+}

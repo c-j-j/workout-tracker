@@ -1,15 +1,23 @@
 export interface RepTemplate {
   count: number;
+  order: number;
 }
 
-export interface ExerciseTemplate {
+export interface NewExerciseTemplate {
   name: string;
-  slug: string;
   reps: RepTemplate[];
 }
 
-export interface WorkoutTemplate {
+export interface ExerciseTemplate extends NewExerciseTemplate {
+  id: string;
+}
+
+export interface NewWorkoutTemplate {
   name: string;
+  exercises: NewExerciseTemplate[];
+}
+
+export interface WorkoutTemplate extends NewWorkoutTemplate {
   id: string;
   exercises: ExerciseTemplate[];
 }
@@ -21,13 +29,13 @@ export interface Rep {
 
 export interface Exercise {
   name: string;
-  slug: string;
+  id: string;
   reps: Rep[];
 }
 
 export interface Workout {
   name: string;
-  id: string; // this will be different to WorkoutTemplate.id
+  id: string;
   startTime: Date;
   endTime?: Date;
   exercises: Exercise[];

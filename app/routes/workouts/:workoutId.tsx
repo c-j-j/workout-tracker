@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 import { ActionFunction, LoaderFunction, redirect, useLoaderData } from "remix";
-import { createUserWorkout, getWorkout } from "~/services/workouts";
+import { createUserWorkout, getWorkoutTemplate } from "~/services/workouts";
 import { ExerciseTemplate, Workout, WorkoutTemplate } from "~/model/types";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 function Workout({ exercise }: Props) {
   return (
     <div>
-      <Link to={`/exercises/${exercise.slug}`}>{exercise.name}</Link>
+      <Link to={`/exercises/${exercise.name}`}>{exercise.name}</Link>
       <div>{exercise.reps.length}</div>
     </div>
   );
@@ -18,9 +18,9 @@ function Workout({ exercise }: Props) {
 
 type LoaderData = WorkoutTemplate;
 
-export const loader: LoaderFunction = ({ params: { workoutId } }) => {
+export const loader: LoaderFunction = async ({ params: { workoutId } }) => {
   if (!workoutId) throw new Error("ahhhhhhh");
-  return getWorkout(workoutId);
+  return await getWorkoutTemplate(workoutId);
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -33,7 +33,9 @@ export const action: ActionFunction = async ({ request }) => {
     throw new Error("no workout id specified");
   }
   const userWorkout = await createUserWorkout(workoutId as string);
-  console.log({ userWorkout });
+  if (!userWorkout) {
+    throw new Error("unable to create user workout");
+  }
   return redirect(`/user-workouts/${userWorkout.id}`);
 };
 
@@ -44,7 +46,7 @@ export default function SingleWorkout() {
     <div>
       <h2>{data.name}</h2>
       {data.exercises.map((exercise) => (
-        <Workout key={exercise.slug} exercise={exercise} />
+        <Workout key={exercise.name} exercise={exercise} />
       ))}
       <form method="post">
         <input type="hidden" name="workout-id" value={data.id} />
