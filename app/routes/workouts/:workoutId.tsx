@@ -11,7 +11,7 @@ function Workout({ exercise }: Props) {
   return (
     <div>
       <Link to={`/exercises/${exercise.name}`}>{exercise.name}</Link>
-      <div>{exercise.reps.length}</div>
+      <div>{exercise.sets.length}</div>
     </div>
   );
 }
@@ -19,16 +19,14 @@ function Workout({ exercise }: Props) {
 type LoaderData = WorkoutTemplate;
 
 export const loader: LoaderFunction = async ({ params: { workoutId } }) => {
-  if (!workoutId) throw new Error("ahhhhhhh");
+  if (!workoutId) throw new Error("no workout param specified");
   return await getWorkoutTemplate(workoutId);
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  console.log("ACTION");
   const form = await request.formData();
   const workoutId = form.get("workout-id");
 
-  console.log({ workoutId });
   if (!workoutId) {
     throw new Error("no workout id specified");
   }

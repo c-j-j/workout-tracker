@@ -1,11 +1,11 @@
-export interface RepTemplate {
-  count: number;
+export interface SetTemplate {
+  reps: number;
   order: number;
 }
 
 export interface NewExerciseTemplate {
   name: string;
-  reps: RepTemplate[];
+  sets: SetTemplate[];
 }
 
 export interface ExerciseTemplate extends NewExerciseTemplate {
@@ -22,15 +22,16 @@ export interface WorkoutTemplate extends NewWorkoutTemplate {
   exercises: ExerciseTemplate[];
 }
 
-export interface Rep {
-  count: number;
+export interface Set {
+  reps: number;
+  order: number;
   weight?: number;
 }
 
 export interface Exercise {
   name: string;
   id: string;
-  reps: Rep[];
+  sets: Set[];
 }
 
 export interface Workout {

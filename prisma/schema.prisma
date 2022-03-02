@@ -25,16 +25,16 @@ model ExerciseTemplate {
     workout    WorkoutTemplate @relation(fields: [workoutId], references: [id])
     workoutId  String
     name       String
-    reps       RepTemplate[]
+    sets       SetTemplate[]
 }
 
-model RepTemplate {
+model SetTemplate {
     id         String   @id @default(uuid())
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
     exercise    ExerciseTemplate @relation(fields: [exerciseId], references: [id])
     exerciseId  String
-    count       Int
+    reps        Int
     order       Int
 }
 
@@ -53,16 +53,16 @@ model Exercise {
     workout    Workout @relation(fields: [workoutId], references: [id])
     workoutId  String
     name       String
-    reps       Rep[]
+    sets       Set[]
 }
 
-model Rep {
+model Set {
     id         String   @id @default(uuid())
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
     exercise    Exercise @relation(fields: [exerciseId], references: [id])
     exerciseId  String
-    count       Int
+    reps        Int
     weight      Int
     order       Int
 }

@@ -11,7 +11,7 @@ async function seed() {
           exercises: {
             create: workout.exercises.map((exercise) => ({
               ...exercise,
-              reps: { create: exercise.reps },
+              sets: { create: exercise.sets },
             })),
           },
         },
@@ -29,18 +29,18 @@ function getWorkouts(): NewWorkoutTemplate[] {
       exercises: [
         {
           name: "Squats",
-          reps: [
+          sets: [
             {
-              count: 10,
+              reps: 10,
+              order: 0,
+            },
+            {
+              reps: 10,
               order: 1,
             },
             {
-              count: 10,
+              reps: 10,
               order: 2,
-            },
-            {
-              count: 10,
-              order: 3,
             },
           ],
         },

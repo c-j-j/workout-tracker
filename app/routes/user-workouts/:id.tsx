@@ -1,6 +1,18 @@
-import { LoaderFunction, useLoaderData } from "remix";
-import { getWorkout } from "~/services/workouts";
+import {
+  ActionFunction,
+  Form,
+  LoaderFunction,
+  redirect,
+  useLoaderData,
+  useSubmit,
+} from "remix";
+import {
+  createUserWorkout,
+  getWorkout,
+  updateUserWorkoutExercises,
+} from "~/services/workouts";
 import { Exercise, Workout } from "~/model/types";
+import set from "lodash/set";
 
 interface Props {
   exercise: Exercise;
@@ -9,8 +21,28 @@ interface Props {
 function Workout({ exercise }: Props) {
   return (
     <div>
-      <div>{exercise.name}</div>
-      <div>{exercise.reps.length}</div>
+      <h3>{exercise.name}</h3>
+      <input type="hidden" name="exercise-id" value={exercise.id} />
+      {exercise.sets.map((set) => {
+        return (
+          <div key={set.order}>
+            <label htmlFor="reps">Reps</label>
+            <input
+              id="reps"
+              name={`sets.${set.id}.reps`}
+              type="number"
+              defaultValue={set.reps}
+            />
+            <label htmlFor="weight">Weight</label>
+            <input
+              id="weight"
+              type="number"
+              name={`sets.${set.id}.weight`}
+              defaultValue={set.weight}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -27,19 +59,43 @@ export const loader: LoaderFunction = ({ params: { id } }) => {
   return workout;
 };
 
+const parseFields = (input) => {
+  const output = {};
+
+  for (let line of input) {
+    set(output, line[0].split("."), line[1]);
+  }
+  return output;
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  const form = await request.formData();
+  const id = form.get("id");
+
+  const fields = parseFields(form);
+
+  await updateUserWorkoutExercises(fields.sets);
+  return redirect(`/user-workouts/${id}`);
+};
+
 export default function SingleWorkout() {
   const data = useLoaderData<LoaderData>();
+  const submit = useSubmit();
+
+  function handleChange(event: any) {
+    submit(event.currentTarget, { method: "post", replace: true });
+  }
 
   return (
     <div>
       <h2>{data.name}</h2>
-      {data.exercises.map((exercise) => (
-        <Workout key={exercise.id} exercise={exercise} />
-      ))}
-      <form method="post">
-        <input type="hidden" name="workout-id" value={data.id} />
-        <button type="submit">Start workout</button>
-      </form>
+      <Form method="post" onSubmit={handleChange}>
+        <input type="hidden" name="id" value={data.id} />
+        {data.exercises.map((exercise) => (
+          <Workout key={exercise.id} exercise={exercise} />
+        ))}
+        <button type="submit">Save workout</button>
+      </Form>
     </div>
   );
 }
