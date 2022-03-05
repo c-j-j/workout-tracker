@@ -25,14 +25,17 @@ export const createUserWorkout = async (id: string) => {
   return db.workout.create({
     data: {
       ...workoutTemplate,
+      id: undefined,
       exercises: {
         create: workoutTemplate.exercises.map((exercise) => ({
           ...exercise,
+          id: undefined,
           workoutId: undefined,
           sets: {
             create: exercise.sets.map((set) => ({
               ...set,
               exerciseId: undefined,
+              id: undefined,
               weight: 0,
             })),
           },

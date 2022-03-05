@@ -23,6 +23,7 @@ export interface WorkoutTemplate extends NewWorkoutTemplate {
 }
 
 export interface Set {
+  id: string | undefined;
   reps: number;
   order: number;
   weight?: number;

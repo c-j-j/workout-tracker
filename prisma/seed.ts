@@ -44,6 +44,40 @@ function getWorkouts(): NewWorkoutTemplate[] {
             },
           ],
         },
+        {
+          name: "Lunges",
+          sets: [
+            {
+              reps: 10,
+              order: 0,
+            },
+            {
+              reps: 10,
+              order: 1,
+            },
+            {
+              reps: 10,
+              order: 2,
+            },
+          ],
+        },
+        {
+          name: "Hip Thrusts",
+          sets: [
+            {
+              reps: 10,
+              order: 0,
+            },
+            {
+              reps: 10,
+              order: 1,
+            },
+            {
+              reps: 10,
+              order: 2,
+            },
+          ],
+        },
       ],
     },
   ];
