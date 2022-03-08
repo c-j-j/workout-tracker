@@ -109,10 +109,14 @@ export default function SingleWorkout() {
           <Workout key={exercise.id} exercise={exercise} />
         ))}
         <div className="mb-4">
-          <Button>Save</Button>
+          <Button name="_action" value="save">
+            Save
+          </Button>
         </div>
         <div className="mb-4">
-          <Button>Finish</Button>
+          <Button name="_action" value="finish">
+            Finish
+          </Button>
         </div>
       </Form>
     </div>
