@@ -6,17 +6,16 @@ import {
   useLoaderData,
 } from "remix";
 import { createUserWorkout, getWorkoutTemplate } from "~/services/workouts";
-import { ExerciseTemplate, Workout, WorkoutTemplate } from "~/model/types";
+import { Exercise, Workout, WorkoutTemplate } from "~/model/types";
 
 interface Props {
-  exercise: ExerciseTemplate;
+  exercise: Exercise;
 }
 
 function Workout({ exercise }: Props) {
   return (
     <tr className="border-b">
-      <td className="text-left py-4">{exercise.name}</td>
-      <td className="text-right py-4">{exercise.sets.length}</td>
+      <td className="text-left py-4">{exercise.exercise.name}</td>
     </tr>
   );
 }
@@ -57,7 +56,7 @@ export default function SingleWorkout() {
         </thead>
         <tbody>
           {data.exercises.map((exercise) => (
-            <Workout key={exercise.name} exercise={exercise} />
+            <Workout key={exercise.exercise.name} exercise={exercise} />
           ))}
         </tbody>
       </table>

@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { NewWorkoutTemplate } from "~/model/types";
 const db = new PrismaClient();
 
 async function seed() {
@@ -9,10 +8,7 @@ async function seed() {
         data: {
           ...workout,
           exercises: {
-            create: workout.exercises.map((exercise) => ({
-              ...exercise,
-              sets: { create: exercise.sets },
-            })),
+            create: workout.exercises,
           },
         },
       });
@@ -22,61 +18,21 @@ async function seed() {
 
 seed();
 
-function getWorkouts(): NewWorkoutTemplate[] {
+function getWorkouts() {
   return [
     {
       name: "Leg Workout",
       exercises: [
         {
-          name: "Squats",
-          sets: [
-            {
-              reps: 10,
-              order: 0,
+          exercise: {
+            create: {
+              name: "Squats",
             },
-            {
-              reps: 10,
-              order: 1,
-            },
-            {
-              reps: 10,
-              order: 2,
-            },
-          ],
-        },
-        {
-          name: "Lunges",
-          sets: [
-            {
-              reps: 10,
-              order: 0,
-            },
-            {
-              reps: 10,
-              order: 1,
-            },
-            {
-              reps: 10,
-              order: 2,
-            },
-          ],
-        },
-        {
-          name: "Hip Thrusts",
-          sets: [
-            {
-              reps: 10,
-              order: 0,
-            },
-            {
-              reps: 10,
-              order: 1,
-            },
-            {
-              reps: 10,
-              order: 2,
-            },
-          ],
+          },
+          order: 0,
+          setOrder: 0,
+          type: "weighted-reps",
+          reps: 8,
         },
       ],
     },

@@ -7,14 +7,26 @@ export const getWorkouts = async () => {
 export const getWorkoutTemplate = (id: string) => {
   return db.workoutTemplate.findUnique({
     where: { id },
-    include: { exercises: { include: { sets: true } } },
+    include: {
+      exercises: {
+        include: {
+          exercise: true,
+        },
+      },
+    },
   });
 };
 
 export const getWorkout = (id: string) => {
   return db.workout.findUnique({
     where: { id },
-    include: { exercises: { include: { sets: true } } },
+    include: {
+      exercises: {
+        include: {
+          exercise: true,
+        },
+      },
+    },
   });
 };
 
@@ -26,30 +38,24 @@ export const createUserWorkout = async (id: string) => {
     data: {
       ...workoutTemplate,
       id: undefined,
+      userId: "6762b53b-90af-4368-bb86-7a7cd7a35436",
       exercises: {
         create: workoutTemplate.exercises.map((exercise) => ({
           ...exercise,
+          exercise: undefined,
           id: undefined,
           workoutId: undefined,
-          sets: {
-            create: exercise.sets.map((set) => ({
-              ...set,
-              exerciseId: undefined,
-              id: undefined,
-              weight: 0,
-            })),
-          },
         })),
       },
     },
   });
 };
 
-export const updateUserWorkoutExercises = async (sets) => {
+export const updateUserWorkoutExercises = async (sets: any) => {
   for (let entry of Object.entries(sets)) {
-    const setId = entry[0];
-    const setData = entry[1];
-    await db.set.update({
+    const setId: any = entry[0];
+    const setData: any = entry[1];
+    await db.workoutExercise.update({
       where: { id: setId },
       data: {
         ...setData,
@@ -58,15 +64,4 @@ export const updateUserWorkoutExercises = async (sets) => {
       },
     });
   }
-  // const foo = {
-  //   ...updatedExercise,
-  //   sets: {
-  //     update: updatedExercise.sets,
-  //   },
-  // };
-  // console.log({ foo });
-  // await db.exercise.update({
-  //   where: { id: exerciseId },
-  //   data: foo,
-  // });
 };

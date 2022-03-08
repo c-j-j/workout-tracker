@@ -1,38 +1,29 @@
-export interface SetTemplate {
-  reps: number;
-  order: number;
-}
-
-export interface NewExerciseTemplate {
+interface ExerciseDetails {
   name: string;
-  sets: SetTemplate[];
 }
 
-export interface ExerciseTemplate extends NewExerciseTemplate {
+export interface NewExercise {
+  order: 0;
+  setOrder: 0;
+  type: string;
+  reps?: number;
+  duration?: number;
+  exercise: ExerciseDetails;
+}
+
+export interface Exercise extends NewExercise {
+  weight?: number;
   id: string;
 }
 
 export interface NewWorkoutTemplate {
   name: string;
-  exercises: NewExerciseTemplate[];
+  exercises: NewExercise[];
 }
 
 export interface WorkoutTemplate extends NewWorkoutTemplate {
   id: string;
-  exercises: ExerciseTemplate[];
-}
-
-export interface Set {
-  id: string | undefined;
-  reps: number;
-  order: number;
-  weight?: number;
-}
-
-export interface Exercise {
-  name: string;
-  id: string;
-  sets: Set[];
+  exercises: Exercise[];
 }
 
 export interface Workout {

@@ -6,11 +6,7 @@ import {
   useLoaderData,
   useSubmit,
 } from "remix";
-import {
-  createUserWorkout,
-  getWorkout,
-  updateUserWorkoutExercises,
-} from "~/services/workouts";
+import { getWorkout, updateUserWorkoutExercises } from "~/services/workouts";
 import { Exercise, Workout } from "~/model/types";
 import set from "lodash/set";
 import { DuplicateIcon, TrashIcon } from "@heroicons/react/solid";
@@ -23,40 +19,38 @@ interface Props {
 function Workout({ exercise }: Props) {
   return (
     <div className="border-b border-b-slate-500 mb-6 pb-4">
-      <h3 className="text-xl font-bold mb-3 text-blue-500">{exercise.name}</h3>
+      <h3 className="text-xl font-bold mb-3 text-blue-500">
+        {exercise.exercise.name}
+      </h3>
       <input type="hidden" name="exercise-id" value={exercise.id} />
-      {exercise.sets.map((set) => {
-        return (
-          <div key={set.order} className="flex flex-row py-2 justify-between">
-            <div>
-              <label htmlFor="reps" className="font-bold mr-4">
-                Reps
-              </label>
-              <input
-                id="reps"
-                name={`sets.${set.id}.reps`}
-                type="number"
-                className="shadow appearance-none border w-12 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                defaultValue={set.reps}
-              />
-            </div>
-            <div>
-              <label htmlFor="weight" className="font-bold mx-4">
-                KG
-              </label>
-              <input
-                id="weight"
-                type="number"
-                name={`sets.${set.id}.weight`}
-                className="shadow appearance-none border w-24 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                defaultValue={set.weight}
-              />
-            </div>
-            <DuplicateIcon className="h-8 w-8 text-black" />
-            <TrashIcon className="h-8 w-8  text-black" />
-          </div>
-        );
-      })}
+      <div className="flex flex-row py-2 justify-between">
+        <div>
+          <label htmlFor="reps" className="font-bold mr-4">
+            Reps
+          </label>
+          <input
+            id="reps"
+            name={`sets.${exercise.id}.reps`}
+            type="number"
+            className="shadow appearance-none border w-12 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            defaultValue={exercise.reps}
+          />
+        </div>
+        <div>
+          <label htmlFor="weight" className="font-bold mx-4">
+            KG
+          </label>
+          <input
+            id="weight"
+            type="number"
+            name={`sets.${exercise.id}.weight`}
+            className="shadow appearance-none border w-24 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            defaultValue={exercise.weight}
+          />
+        </div>
+        <DuplicateIcon className="h-8 w-8 text-black" />
+        <TrashIcon className="h-8 w-8  text-black" />
+      </div>
     </div>
   );
 }
@@ -73,8 +67,8 @@ export const loader: LoaderFunction = ({ params: { id } }) => {
   return workout;
 };
 
-const parseFields = (input) => {
-  const output = {};
+const parseFields = (input: FormData) => {
+  const output: any = {};
 
   for (let line of input) {
     set(output, line[0].split("."), line[1]);

@@ -15,27 +15,31 @@ model WorkoutTemplate {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   name       String
-  exercises  ExerciseTemplate[]
+  exercises  WorkoutExerciseTemplate[]
 }
 
-model ExerciseTemplate {
+model WorkoutExerciseTemplate {
     id         String   @id @default(uuid())
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
+    exercise   Exercise @relation(fields: [exerciseId], references: [id])
+    exerciseId String
     workout    WorkoutTemplate @relation(fields: [workoutId], references: [id])
     workoutId  String
-    name       String
-    sets       SetTemplate[]
+    order      Int
+    setOrder  Int
+    type       String
+    reps       Int?
+    duration   Int?
 }
 
-model SetTemplate {
+model Exercise {
     id         String   @id @default(uuid())
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
-    exercise    ExerciseTemplate @relation(fields: [exerciseId], references: [id])
-    exerciseId  String
-    reps        Int
-    order       Int
+    workoutExerciseTemplates WorkoutExerciseTemplate[]
+    workoutExercises WorkoutExercise[]
+    name       String
 }
 
 model Workout {
@@ -43,26 +47,31 @@ model Workout {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   name       String
-  exercises  Exercise[]
+  exercises  WorkoutExercise[]
+  user       User  @relation(fields: [userId], references: [id])
+  userId     String
 }
 
-model Exercise {
+model WorkoutExercise {
     id         String   @id @default(uuid())
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
+    exercise   Exercise @relation(fields: [exerciseId], references: [id])
+    exerciseId String
     workout    Workout @relation(fields: [workoutId], references: [id])
     workoutId  String
-    name       String
-    sets       Set[]
+    order      Int
+    setOrder   Int
+    type       String
+    reps       Int?
+    duration   Int?
+    weight     Int?
 }
 
-model Set {
-    id         String   @id @default(uuid())
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-    exercise    Exercise @relation(fields: [exerciseId], references: [id])
-    exerciseId  String
-    reps        Int
-    weight      Int
-    order       Int
+model User {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  name       String
+  workouts   Workout[]
 }
