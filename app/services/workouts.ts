@@ -65,3 +65,28 @@ export const updateUserWorkoutExercises = async (sets: any) => {
     });
   }
 };
+
+export const duplicateExercise = async (id: string) => {
+  const exercise = await db.workoutExercise.findUnique({ where: { id } });
+  if (!exercise) throw new Error("no exercise found");
+  const others = await db.workoutExercise.findMany({
+    where: { workoutId: exercise.workoutId, exerciseId: exercise.exerciseId },
+  });
+  const maxSetOrder = others.reduce(
+    (maxSetOrder, next) => Math.max(maxSetOrder, next.setOrder),
+    0
+  );
+
+  await db.workoutExercise.create({
+    data: {
+      ...exercise,
+      id: undefined,
+      setOrder: maxSetOrder + 1,
+    },
+  });
+  return null;
+};
+
+export const deleteExercise = async (id: string) => {
+  return db.workoutExercise.delete({ where: { id } });
+};
