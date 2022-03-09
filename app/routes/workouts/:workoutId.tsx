@@ -7,6 +7,7 @@ import {
 } from "remix";
 import { createUserWorkout, getWorkoutTemplate } from "~/services/workouts";
 import { Exercise, Workout, WorkoutTemplate } from "~/model/types";
+import { requireUserId } from "~/utils/session.server";
 
 interface Props {
   exercise: Exercise;
@@ -28,13 +29,14 @@ export const loader: LoaderFunction = async ({ params: { workoutId } }) => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
+  const userId = await requireUserId(request);
   const form = await request.formData();
-  const workoutId = form.get("workout-id");
+  const workoutId = form.get("workout-id") as string;
 
   if (!workoutId) {
     throw new Error("no workout id specified");
   }
-  const userWorkout = await createUserWorkout(workoutId as string);
+  const userWorkout = await createUserWorkout(workoutId, userId);
   if (!userWorkout) {
     throw new Error("unable to create user workout");
   }

@@ -30,7 +30,7 @@ export const getWorkout = (id: string) => {
   });
 };
 
-export const createUserWorkout = async (id: string) => {
+export const createUserWorkout = async (id: string, userId: string) => {
   const workoutTemplate = await getWorkoutTemplate(id);
   if (!workoutTemplate) throw new Error("no workout template found");
 
@@ -38,7 +38,7 @@ export const createUserWorkout = async (id: string) => {
     data: {
       ...workoutTemplate,
       id: undefined,
-      userId: "6762b53b-90af-4368-bb86-7a7cd7a35436",
+      userId,
       exercises: {
         create: workoutTemplate.exercises.map((exercise) => ({
           ...exercise,
